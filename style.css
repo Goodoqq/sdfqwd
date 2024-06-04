@@ -1,0 +1,308 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@400;500;700;900&display=swap');
+
+/* Базовые стили */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Jost', sans-serif;
+  background-color: #1a1a1a;
+  color: #fff;
+}
+
+/* Медиа-запросы для адаптивности */
+/* Мобильные устройства (ширина до 512px) */
+@media (max-width: 512px) {
+  body {
+    width: 100%;
+    max-width: 512px;
+    box-sizing: border-box;
+    padding: 10px;
+  }
+}
+
+/* Планшеты (ширина от 512px до 768px) */
+@media (min-width: 512px) and (max-width: 768px) {
+  body {
+    width: 100%;
+    max-width: 768px;
+    box-sizing: border-box;
+    padding: 20px;
+  }
+}
+
+/* Десктопы (ширина от 768px) */
+@media (min-width: 768px) {
+  body {
+    width: 100%;
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 30px;
+  }
+}
+
+/* Стили для первой страницы */
+.container {
+  background-color: rgb(52, 47, 47);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
+.top__block {
+  display: flex;
+  align-items: center;
+}
+
+.app__logo {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  background-color: white;
+  overflow: hidden;
+}
+
+.app__logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.app__name {
+  margin-left: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.gif {
+  margin-top: 5px;
+  padding: 0 100px;
+  display: flex;
+  justify-content: center;
+}
+
+.gif img {
+  max-width: 100%;
+  height: auto;
+}
+
+.select {
+  background-color: rgb(52, 47, 47);
+  border-radius: 10px;
+  padding: 10px;
+  margin: 0 auto;
+  margin-bottom: 5px;
+}
+
+.button-container {
+  margin-top: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.tariff-button {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.select select {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  background-color: rgb(52, 47, 47);
+  color: white;
+  border: none;
+  outline: none;
+  text-align-last: center; /* выравнивание текста по центру */
+}
+
+.select select option {
+  background-color: rgb(52, 47, 47);
+  color: white;
+}
+
+.checkout__size h1 {
+  text-align: center;
+  margin-bottom: 0.5rem; /* уменьшенное расстояние */
+}
+
+.checkout__size p {
+  text-align: center;
+  margin-top: 0.5rem; /* уменьшенное расстояние */
+}
+/* Стили для первой страницы */
+
+
+/* Стили для второй страницы */
+.back-link {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: #333;
+  font-size: 24px;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: #666;
+}
+
+.subscription-title {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 30px;
+  margin-top: 5px; /* Добавлен отступ сверху 5px */
+  margin-bottom: 5px; /* Добавлен отступ снизу 5px */
+}
+
+.step-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.step-name {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.step-icon {
+  font-size: 24px;
+  color: #ccc;
+}
+
+.active .step-icon {
+  color: #007bff;
+}
+
+.plan-block,
+.payment-block {
+  margin-bottom: 30px;
+}
+
+.plan,
+.payment-option,
+.empty-block {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background-color: #444;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.plan:hover,
+.payment-option:hover,
+.empty-block:hover {
+  background-color: #555;
+}
+
+.plan.selected,
+.payment-option.selected {
+  background-color: #007bff;
+}
+
+.radio {
+  margin-right: 15px;
+  color: #007bff;
+}
+
+.selected .radio {
+  color: #fff;
+}
+
+.details {
+  flex-grow: 1;
+}
+
+.name {
+  font-weight: 500;
+}
+
+.price {
+  color: #ccc;
+}
+
+.old-price {
+  text-decoration: line-through;
+}
+
+.badge {
+  background-color: #007bff;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.next-btn-container {
+  display: flex;
+  justify-content: center;
+}
+
+.next-btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-weight: 500;
+  font-size: 16px;
+  width: 100%;
+}
+
+.send-data-btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-weight: 500;
+  font-size: 16px;
+  width: 100%;
+}
+
+.next-btn:hover {
+  background-color: #0056b3;
+}
+
+.selected-options {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+}
+
+.selected-server,
+.selected-plan,
+.selected-payment {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background-color: #444;
+  transition: background-color 0.3s;
+}
+/* Стили для второй страницы */

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPN WEB</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <a href="index.html" class="back-link">
+        <i class="fas fa-times"></i>
+    </a>
+
+    <h1 class="subscription-title" id="subscriptionTitle">Выбор тарифа</h1>
+    <div class="step-container">
+        <div class="step active">
+            <div class="step-name">Выбор плана</div>
+            <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+        </div>
+        <div class="step">
+            <div class="step-name">Оплата</div>
+            <div class="step-icon"><i class="far fa-circle"></i></div>
+        </div>
+        <div class="step">
+            <div class="step-name">Подтверждение</div>
+            <div class="step-icon"><i class="far fa-circle"></i></div>
+        </div>
+    </div>
+    <div class="plan-block">
+        <div class="plan" data-plan="5 дней">
+            <div class="radio"></div>
+            <div class="details">
+                <div class="name">5 дней</div>
+                <div class="price">
+                    <span class="old-price">₽199</span> ₽0 / 5 дней бесплатно
+                </div>
+            </div>
+            <div class="badge">Бесплатно</div>
+        </div>
+        <div class="plan" data-plan="1 месяц">
+            <div class="radio"></div>
+            <div class="details">
+                <div class="name">1 месяц</div>
+                <div class="price">
+                    <span class="old-price">₽400</span> ₽199 / 1 месяц
+                </div>
+            </div>
+            <div class="badge">-50%</div>
+        </div>
+        <div class="plan" data-plan="3 месяца">
+            <div class="radio"></div>
+            <div class="details">
+                <div class="name">3 месяца</div>
+                <div class="price">
+                    <span class="old-price">₽600</span> ₽499 / 3 месяца
+                </div>
+            </div>
+            <div class="badge">-17%</div>
+        </div>
+        <div class="plan" data-plan="6 месяцев">
+            <div class="radio"></div>
+            <div class="details">
+                <div class="name">6 месяцев</div>
+                <div class="price">
+                    <span class="old-price">₽1200</span> ₽899 / 6 месяцев
+                </div>
+            </div>
+            <div class="badge">-25%</div>
+        </div>
+        <div class="plan" data-plan="1 год">
+            <div class="radio"></div>
+            <div class="details">
+                <div class="name">1 год</div>
+                <div class="price">
+                    <span class="old-price">₽2400</span> ₽1199 / 1 год
+                </div>
+            </div>
+            <div class="badge">-50%</div>
+        </div>
+    </div>
+    <div class="payment-block" style="display: none;">
+        <div class="payment-options">
+            <div class="payment-option" data-payment="Банковская карта">
+                <div class="radio">
+                    <i class="far fa-circle"></i>
+                </div>
+                <div class="details">
+                    <div class="name">Банковская карта</div>
+                </div>
+            </div>
+            <div class="payment-option" data-payment="TON">
+                <div class="radio">
+                    <i class="far fa-circle"></i>
+                </div>
+                <div class="details">
+                    <div class="name">TON</div>
+                </div>
+            </div>
+            <div class="payment-option" data-payment="USDT">
+                <div class="radio">
+                    <i class="far fa-circle"></i>
+                </div>
+                <div class="details">
+                    <div class="name">USDT</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="selected-options" style="display: none;">
+        <div class="selected-server"></div>
+        <div class="selected-plan"></div>
+        <div class="selected-payment"></div>
+        <button class="send-data-btn">Получить доступ к VPN</button>
+    </div>
+    <div class="next-btn-container">
+        <button class="next-btn" id="nextButton" disabled>Далее</button>
+    </div>
+
+    <script src="https://telegram.org/js/tg-web-app-data.js"></script>
+    <script src="pay.js"></script>
+</body>
+</html>
+
+
+
+
+

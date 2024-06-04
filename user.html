@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebApp</title>
+    <link rel="stylesheet" href="user.css">
+</head>
+<body>
+    <div class="container">
+        <div class="top__block">
+            <div class="app__logo">
+                <img src="img/logo.jpg" alt="Logo">
+            </div>
+            <div class="app__name">GhostGuardVPN</div>
+        </div>
+    </div>
+    <div class="gif">
+        <img src="img/emojibest_com_AnimatedSticker.gif" alt="GIF">
+    </div>
+    <div class="checkout__size">
+        <h1>Готово к подключению</h1>
+        <p>Загрузите приложение перед подключением, на пк после нажатия на "Подключиться" откройте приложение Outline.</p>
+    </div>
+    <div class="server-info">
+        <div class="server-name" id="serverName"></div>
+    </div>
+    <div class="button-container">
+        <button class="tariff-button" id="connectButton">Подключиться</button>
+        <div class="empty-block"></div>
+        <div class="dropdown">
+            <button class="tariff-button" id="dropdownButton">&#8595; Скачать приложение</button>
+            <div class="dropdown-content">
+                <a href="https://apps.apple.com/ru/app/outline-app/id1356177741" class="download-link" data-os="ios" target="_blank">
+                    <img src="ios-icon.png">
+                    <span>iOS</span>
+                </a>
+                <a href="https://apps.apple.com/ru/app/outline-secure-internet-access/id1356178125?mt=12" class="download-link" data-os="macos" target="_blank">
+                    <img src="macos-icon.png">
+                    <span>macOS</span>
+                </a>
+                <a href="https://s3.amazonaws.com/outline-releases/client/windows/stable/Outline-Client.exe" class="download-link" data-os="windows" target="_blank">
+                    <img src="windows-icon.png">
+                    <span>Windows</span>
+                </a>
+                <a href="https://s3.amazonaws.com/outline-releases/client/linux/stable/Outline-Client.AppImage" class="download-link" data-os="linux" target="_blank">
+                    <img src="linux-icon.png">
+                    <span>Linux</span>
+                </a>
+                <a href="https://play.google.com/store/apps/details?id=org.outline.android.client" class="download-link" data-os="android" target="_blank">
+                    <img src="android-icon.png">
+                    <span>Android</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Открывает или закрывает выпадающее меню
+        function toggleDropdown() {
+            var dropdownContent = document.querySelector('.dropdown-content');
+            dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // При загрузке документа добавляем слушатель события клика на кнопку "Скачать приложение"
+        document.addEventListener('DOMContentLoaded', function() {
+            var dropdownButton = document.getElementById('dropdownButton');
+            dropdownButton.addEventListener('click', toggleDropdown);
+
+            // Добавляем обработчик события клика на кнопку "Подключиться"
+            var connectButton = document.getElementById('connectButton');
+            connectButton.addEventListener('click', function() {
+                // Получаем key из URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const key = urlParams.get('key');
+
+                // Открываем ссылку с ключом при нажатии на кнопку "Подключиться"
+                if (key) {
+                    window.open(`${key}`, '_blank');
+                } else {
+                    alert('Ключ не найден');
+                }
+            });
+        });
+
+        // Добавляем обработчик события клика вне выпадающего меню для его закрытия
+        document.addEventListener('click', function(event) {
+            var dropdownContent = document.querySelector('.dropdown-content');
+            var dropdownButton = document.getElementById('dropdownButton');
+
+            if (event.target !== dropdownButton && !dropdownContent.contains(event.target)) {
+                dropdownContent.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
