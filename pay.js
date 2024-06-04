@@ -119,8 +119,8 @@ paymentOptions.forEach(option => {
     });
 });
 
-// Функция для отправки данных в Telegram-бот
-const sendDataToBot = () => {
+// Функция для отправки данных в Telegram-бот и получения платежной ссылки
+const sendDataToBot = async () => {
     const server = selectedServer.textContent.replace('Выбранный сервер: ', '');
     const plan = document.querySelector('.selected-plan').textContent.replace('Выбранный план: ', '');
     const paymentField = document.querySelector('.selected-payment');
@@ -132,8 +132,9 @@ const sendDataToBot = () => {
         payment
     };
 
-    Telegram.WebApp.sendData(JSON.stringify(dataToSend));
+    try {
+        await Telegram.WebApp.sendData(JSON.stringify(dataToSend));
+    } catch (error) {
+        console.error('Error:', error);
+    }
 };
-
-// Обработчик события для кнопки "Отправить данные в бот"
-sendDataBtn.addEventListener('click', sendDataToBot);
