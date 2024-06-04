@@ -133,17 +133,13 @@ const sendDataToBot = async () => {
     };
 
     try {
-        const result = await Telegram.WebApp.sendData(JSON.stringify(dataToSend));
-        if (result.ok) {
-            console.log('Данные успешно отправлены в бот');
-        } else {
-            console.error('Ошибка при отправке данных в бот:', result.error);
-        }
+        await Telegram.WebApp.sendData(JSON.stringify(dataToSend));
+        alert('Данные успешно отправлены в бот');
     } catch (error) {
         console.error('Ошибка при отправке данных в бот:', error);
+        alert('Ошибка при отправке данных в бот');
     }
 };
-
 // Обработчик события для кнопки "Отправить данные в бот"
 sendDataBtn.addEventListener('click', sendDataToBot);
 
