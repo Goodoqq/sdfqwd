@@ -135,8 +135,10 @@ const sendDataToBot = async () => {
         payment
     };
 
+    console.log('Отправка данных в бот:', dataToSend); // Логирование данных
+
     try {
-        const response = await fetch(`https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendMessage`, {
+        const response = await fetch(`https://api.telegram.org/botYOUR_BOT_TOKEN/sendMessage`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -148,6 +150,7 @@ const sendDataToBot = async () => {
         });
 
         const result = await response.json();
+        console.log('Ответ бота:', result); // Логирование ответа бота
         const paymentUrl = result.url;
 
         openPaymentLink(paymentUrl);
