@@ -133,22 +133,27 @@ const sendDataToBot = async () => {
     };
 
     try {
-        await Telegram.WebApp.sendData(JSON.stringify(dataToSend));
+        const response = await fetch(`https://api.telegram.org/bot${Telegram.WebApp.initDataUnsafe.query_id}/web_app_data`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+        });
+
+        const result = await response.json();
+        const paymentUrl = result.url;
+
+        openPaymentLink(paymentUrl);
     } catch (error) {
-        console.error('Error:',error);
-      }
-   };
-   
-   // Добавляем обработчик события для кнопки "Получить доступ"
-   sendDataBtn.addEventListener('click', sendDataToBot);
-
-   Telegram.WebApp.onEvent('WEB_APP_DATA_RECEIVED', function(webAppData) {
-    const receivedData = JSON.parse(webAppData.data);
-    const paymentUrl = receivedData.url;
-
-    if (paymentUrl) {
-        Telegram.WebApp.openLink(paymentUrl);
-    } else {
-        console.error('Invalid payment URL received');
+        console.error('Error:', error);
     }
-});
+};
+
+// Функция для открытия платежной ссылки
+const openPaymentLink = (url) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+};
+
+// Обработчик события для кнопки "Отправить данные в бот"
+sendDataBtn.addEventListener('click', sendDataToBot);
