@@ -122,47 +122,51 @@ paymentOptions.forEach(option => {
     });
 });
 
-// Функция для отправки данных в Telegram-бот и получения платежной ссылки
-const sendDataToBot = async () => {
-    const server = selectedServer.textContent.replace('Выбранный сервер: ', '');
-    const plan = document.querySelector('.selected-plan').textContent.replace('Выбранный план: ', '');
-    const paymentField = document.querySelector('.selected-payment');
-    const payment = paymentField ? paymentField.textContent.replace('Выбранный способ оплаты: ', '') : '';
+    // Функция для отправки данных в Telegram-бот и получения платежной ссылки
+    const sendDataToBot = async () => {
+        const server = selectedServer.textContent.replace('Выбранный сервер: ', '');
+        const plan = document.querySelector('.selected-plan').textContent.replace('Выбранный план: ', '');
+        const paymentField = document.querySelector('.selected-payment');
+        const payment = paymentField ? paymentField.textContent.replace('Выбранный способ оплаты: ', '') : '';
 
-    const dataToSend = {
-        server,
-        plan,
-        payment
+        const dataToSend = {
+            server,
+            plan,
+            payment
+        };
+
+        console.log('Отправка данных в бот:', dataToSend); // Логирование данных
+
+        try {
+            const response = await fetch(`https://api.telegram.org/botYOUR_BOT_TOKEN/sendMessage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: Telegram.WebApp.initDataUnsafe.user.id,
+                    text: JSON.stringify(dataToSend)
+                })
+            });
+
+            const result = await response.json();
+            console.log('Ответ бота:', result); // Логирование ответа бота
+
+            if (result.ok) {
+                const paymentUrl = result.result.text;
+                openPaymentLink(paymentUrl);
+            } else {
+                alert('Ошибка при получении ссылки на оплату.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
-    console.log('Отправка данных в бот:', dataToSend); // Логирование данных
+    // Функция для открытия платежной ссылки
+    const openPaymentLink = (url) => {
+        window.open(url, '_blank', 'noopener,noreferrer');
+    };
 
-    try {
-        const response = await fetch(`https://api.telegram.org/botYOUR_BOT_TOKEN/sendMessage`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                chat_id: Telegram.WebApp.initDataUnsafe.user.id,
-                text: JSON.stringify(dataToSend)
-            })
-        });
-
-        const result = await response.json();
-        console.log('Ответ бота:', result); // Логирование ответа бота
-        const paymentUrl = result.url;
-
-        openPaymentLink(paymentUrl);
-    } catch (error) {
-        console.error('Error:', error);
-    }
-};
-
-// Функция для открытия платежной ссылки
-const openPaymentLink = (url) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
-};
-
-// Обработчик события для кнопки "Отправить данные в бот"
-sendDataBtn.addEventListener('click', sendDataToBot);
+    // Обработчик события для кнопки "Отправить данные в бот"
+    sendDataBtn.addEventListener('click', sendDataToBot);
