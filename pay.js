@@ -12,6 +12,9 @@ const selectedOptions = document.querySelector('.selected-options');
 // Определяем переменную currentStep и устанавливаем ее начальное значение
 let currentStep = 0;
 
+// Инициализация Telegram WebApp
+Telegram.WebApp.ready();
+
 // Добавляем обработчики событий для выбора плана
 plans.forEach(plan => {
     plan.addEventListener('click', () => {
@@ -133,12 +136,15 @@ const sendDataToBot = async () => {
     };
 
     try {
-        const response = await fetch(`https://api.telegram.org/bot${Telegram.WebApp.initDataUnsafe.query_id}/web_app_data`, {
+        const response = await fetch(`https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendMessage`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(dataToSend)
+            body: JSON.stringify({
+                chat_id: Telegram.WebApp.initDataUnsafe.user.id,
+                text: JSON.stringify(dataToSend)
+            })
         });
 
         const result = await response.json();
