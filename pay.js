@@ -132,17 +132,26 @@ const sendDataToBot = () => {
         payment
     };
 
-    Telegram.WebApp.sendData(JSON.stringify(dataToSend));
-
-    // Ожидание ответа от бота с платежной ссылкой
-    Telegram.WebApp.onEvent('message', (message) => {
-        const data = JSON.parse(message.data);
-        if (data.pay_link) {
-            const payLink = data.pay_link;
-            document.getElementById('payLink').innerHTML = `<a href="${payLink}" target="_blank">Оплатить</a>`;
-        }
-    });
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://api.telegram.org/bot5797908031:AAEZGcttLY2rBbm-3jQxGZic8HJ2rANUQMU/sendData', true);
+xhr.setRequestHeader('Content-Type', 'application/json');
+xhr.onreadystatechange = function() {
+if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+const response = JSON.parse(xhr.responseText);
+if (response.result && response.result.pay_link) {
+const payLink = response.result.pay_link;
+document.getElementById('payLink').innerHTML = <a href="${payLink}" target="_blank">Оплатить</a>;
+}
+}
 };
-
-// Обработчик события для кнопки "Отправить данные в бот"
-sendDataBtn.addEventListener('click', sendDataToBot);
+xhr.send(JSON.stringify(dataToSend));
+// Добавляем обработчики событий для выбора плана
+plans.forEach(plan => {
+plan.addEventListener('click', () => {
+if (plan.textContent.trim() === 'Получить доступ к VPN на 5 дней') {
+// Пропускаем шаг оплаты
+nextButton.disabled = false;
+nextButton.click();
+}
+});
+});
