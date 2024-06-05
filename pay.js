@@ -126,19 +126,25 @@ const sendDataToBot = () => {
         payment
     };
 
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', 'https://api.telegram.org/bot5797908031:AAEZGcttLY2rBbm-3jQxGZic8HJ2rANUQMU/sendData', true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-            const response = JSON.parse(xhr.responseText);
-            if (response.result && response.result.pay_link) {
-                const payLink = response.result.pay_link;
-                document.getElementById('payLink').innerHTML = `<a href="${payLink}" target="_blank">Оплатить</a>`;
-            }
+    fetch('/sendData', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataToSend)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.result && data.result.pay_link) {
+            const payLinkContainer = document.getElementById('payLinkContainer');
+            const payLink = document.getElementById('payLink');
+            payLink.href = data.result.pay_link;
+            payLinkContainer.style.display = 'block'; // Отображаем контейнер со ссылкой на оплату
         }
-    };
-    xhr.send(JSON.stringify(dataToSend));
+    })
+    .catch(error => {
+        console.error('Ошибка:', error);
+    });
 };
 
 // Обработчик события для кнопки "Отправить данные в бот"
