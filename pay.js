@@ -154,7 +154,7 @@ const generatePaymentLinks = async (data) => {
 };
 
 // Обработчик события для кнопки "Отправить данные в бот"
-sendDataBtn.addEventListener('click', () => {
+sendDataBtn.addEventListener('click', async () => {
     const selectedPlan = document.querySelector('.selected-plan').textContent.replace('Выбранный план: ', '');
     const selectedPayment = document.querySelector('.selected-payment').textContent.replace('Выбранный способ оплаты: ', '');
 
@@ -163,6 +163,35 @@ sendDataBtn.addEventListener('click', () => {
         payment: selectedPayment
     };
 
-    // Отправка данных в бот и обработка ответа
-    generatePaymentLinks(data);
+    try {
+        const response = await fetch('/process-payment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const responseData = await response.json();
+
+        // Показываем ссылку на оплату
+        if (responseData.url) {
+            const paymentLinkElement = document.createElement('a');
+            paymentLinkElement.href = responseData.url;
+            paymentLinkElement.textContent = `Ссылка для оплаты ${data.plan} через ${data.payment}`;
+            paymentLinkElement.target = '_blank';
+            paymentLinkContainer.appendChild(paymentLinkElement);
+            paymentLinkContainer.style.display = 'block';
+        } else {
+            alert('Не удалось получить ссылку для оплаты');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
 });
+
+
