@@ -8,7 +8,6 @@ const steps = document.querySelectorAll('.step');
 const sendDataBtn = document.querySelector('.send-data-btn');
 const subscriptionTitle = document.getElementById('subscriptionTitle');
 const selectedOptions = document.querySelector('.selected-options');
-const paymentLinkContainer = document.getElementById('paymentLinkContainer');
 
 // Определяем переменную currentStep и устанавливаем ее начальное значение
 let currentStep = 0;
@@ -120,78 +119,34 @@ paymentOptions.forEach(option => {
     });
 });
 
-// Функция для генерации ссылок на оплату
-const generatePaymentLinks = async (data) => {
-    try {
-        const response = await fetch('/process-payment', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
+// Функция для отправки данных в Telegram-бот
+const sendDataToBot = () => {
+    const server = selectedServer.textContent.replace('Выбранный сервер: ', '');
+    const plan = document.querySelector('.selected-plan').textContent.replace('Выбранный план: ', '');
+    const paymentField = document.querySelector('.selected-payment');
+    const payment = paymentField ? paymentField.textContent.replace('Выбранный способ оплаты: ', '') : '';
 
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
+    const dataToSend = {
+        server,
+        plan,
+        payment
+    };
 
-        const responseData = await response.json();
-
-        // Показываем ссылку на оплату
-        if (responseData.paymentLink) {
-            const paymentLinkElement = document.createElement('a');
-            paymentLinkElement.href = responseData.paymentLink;
-            paymentLinkElement.textContent = `Ссылка для оплаты ${data.plan} через ${data.payment}`;
-            paymentLinkElement.target = '_blank';
-            paymentLinkContainer.appendChild(paymentLinkElement);
-            paymentLinkContainer.style.display = 'block';
-        } else {
-            alert('Не удалось получить ссылку для оплаты');
-        }
-    } catch (error) {
+    fetch('/send_data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataToSend)
+    })
+    .then(response => {
+        // Обработка ответа от сервера
+        console.log('Data sent successfully');
+    })
+    .catch(error => {
         console.error('Error:', error);
-    }
+    });
 };
 
 // Обработчик события для кнопки "Отправить данные в бот"
-sendDataBtn.addEventListener('click', async () => {
-    const selectedPlan = document.querySelector('.selected-plan').textContent.replace('Выбранный план: ', '');
-    const selectedPayment = document.querySelector('.selected-payment').textContent.replace('Выбранный способ оплаты: ', '');
-
-    const data = {
-        plan: selectedPlan,
-        payment: selectedPayment
-    };
-
-    try {
-        const response = await fetch('/process-payment', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-
-        const responseData = await response.json();
-
-        // Показываем ссылку на оплату
-        if (responseData.url) {
-            const paymentLinkElement = document.createElement('a');
-            paymentLinkElement.href = responseData.url;
-            paymentLinkElement.textContent = `Ссылка для оплаты ${data.plan} через ${data.payment}`;
-            paymentLinkElement.target = '_blank';
-            paymentLinkContainer.appendChild(paymentLinkElement);
-            paymentLinkContainer.style.display = 'block';
-        } else {
-            alert('Не удалось получить ссылку для оплаты');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-});
-
-
+sendDataBtn.addEventListener('click', sendDataToBot);
