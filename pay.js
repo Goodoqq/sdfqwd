@@ -38,78 +38,64 @@ plans.forEach(plan => {
 
 // Обработчик события для кнопки "Далее"
 nextButton.addEventListener('click', () => {
+    const selectedPlanElement = document.querySelector('.plan.selected .name');
+    const selectedPlan = selectedPlanElement ? selectedPlanElement.textContent : '';
+
     if (currentStep === 0) {
-        // Переключаемся на блок с выбором способа оплаты
         planBlock.style.display = 'none';
         paymentBlock.style.display = 'block';
-        // Обновляем текст заголовка
         subscriptionTitle.textContent = 'Варианты оплаты';
-        // Обновляем текущий шаг
         currentStep++;
-        // Активируем следующий шаг в индикаторе
         steps[currentStep].classList.add('active');
-        // Устанавливаем иконку для текущего шага
         document.querySelectorAll('.step-icon')[currentStep].innerHTML = '<i class="fas fa-check-circle"></i>';
-    } else if (currentStep === 1) {
-        const selectedPlanElement = document.querySelector('.plan.selected .name');
-        const selectedPlan = selectedPlanElement ? selectedPlanElement.textContent : '';
 
+        if (selectedPlan === '5 дней') {
+            nextButton.click();
+        }
+    } else if (currentStep === 1) {
         const selectedPaymentOption = document.querySelector('.payment-option.selected');
         if (selectedPaymentOption) {
-            // Код для перехода к следующему шагу
             planBlock.style.display = 'none';
-            paymentBlock.style.display = 'none'; // Скрыть блок с выбором способа оплаты
+            paymentBlock.style.display = 'none';
 
             if (selectedPlan === '5 дней') {
-                // Обработка для плана "5 дней"
-                selectedServer.textContent = 'Выбранный сервер: ' + localStorage.getItem('selectedServer');
-                const selectedPlanField = document.querySelector('.selected-plan');
-                selectedPlanField.textContent = 'Выбранный план: ' + selectedPlan;
-
-                // Показать блок с выбранными параметрами
-                selectedOptions.style.display = 'block';
-                // Убираем выбранный способ оплаты, если план 5 дней
-                document.querySelector('.selected-payment').style.display = 'none';
-                // Обновляем текст заголовка на "Все верно?"
-                subscriptionTitle.textContent = 'Все верно?';
-                // Устанавливаем третий кружок активным
-                steps[2].classList.add('active');
-                // Устанавливаем иконку для третьего кружка
-                document.querySelectorAll('.step-icon')[2].innerHTML = '<i class="fas fa-check-circle"></i>';
-                nextButton.textContent = 'Получить доступ';
-
-                // Скрываем кнопку "Перейти к оплате"
-                nextButton.style.display = 'none';
-                // Показываем кнопку "Отправить данные в бот"
-                sendDataBtn.style.display = 'block';
+                handleFreeplan(selectedPlan);
             } else {
-                // Обработка для платных планов
-                const selectedPlanField = document.querySelector('.selected-plan');
-                const selectedPaymentField = document.querySelector('.selected-payment');
-                selectedServer.textContent = 'Выбранный сервер: ' + localStorage.getItem('selectedServer');
-                selectedPlanField.textContent = 'Выбранный план: ' + selectedPlan;
-                selectedPaymentField.textContent = 'Выбранный способ оплаты: ' + selectedPaymentOption.querySelector('.name').textContent;
-                // Показать блок с выбранными параметрами
-                selectedOptions.style.display = 'block';
-                // Обновляем текст заголовка на "Все верно?"
-                subscriptionTitle.textContent = 'Все верно?';
-                // Устанавливаем третий кружок активным
-                steps[2].classList.add('active');
-                // Устанавливаем иконку для третьего кружка
-                document.querySelectorAll('.step-icon')[2].innerHTML = '<i class="fas fa-check-circle"></i>';
-                nextButton.textContent = 'Перейти к оплате';
-
-                // Скрываем кнопку "Перейти к оплате"
-                nextButton.style.display = 'none';
-                // Показываем кнопку "Отправить данные в бот"
-                sendDataBtn.style.display = 'block';
+                handlePaidPlan(selectedPlan, selectedPaymentOption);
             }
+
+            currentStep++;
+            steps[currentStep].classList.add('active');
+            document.querySelectorAll('.step-icon')[currentStep].innerHTML = '<i class="fas fa-check-circle"></i>';
+            nextButton.textContent = 'Перейти к оплате';
+            nextButton.style.display = 'none';
+            sendDataBtn.style.display = 'block';
         } else {
-            // Способ оплаты не выбран, выводим сообщение или предупреждение
             alert('Пожалуйста, выберите способ оплаты');
         }
     }
 });
+
+function handleFreeplan(selectedPlan) {
+    selectedServer.textContent = 'Выбранный сервер: ' + localStorage.getItem('selectedServer');
+    const selectedPlanField = document.querySelector('.selected-plan');
+    selectedPlanField.textContent = 'Выбранный план: ' + selectedPlan;
+
+    selectedOptions.style.display = 'block';
+    document.querySelector('.selected-payment').style.display = 'none';
+    subscriptionTitle.textContent = 'Все верно?';
+    nextButton.textContent = 'Получить доступ';
+}
+
+function handlePaidPlan(selectedPlan, selectedPaymentOption) {
+    const selectedPlanField = document.querySelector('.selected-plan');
+    const selectedPaymentField = document.querySelector('.selected-payment');
+    selectedServer.textContent = 'Выбранный сервер: ' + localStorage.getItem('selectedServer');
+    selectedPlanField.textContent = 'Выбранный план: ' + selectedPlan;
+    selectedPaymentField.textContent = 'Выбранный способ оплаты: ' + selectedPaymentOption.querySelector('.name').textContent;
+    selectedOptions.style.display = 'block';
+    subscriptionTitle.textContent = 'Все верно?';
+}
 
 // Обработчик события для выбора варианта оплаты
 const paymentOptions = document.querySelectorAll('.payment-option');
@@ -142,17 +128,18 @@ const sendDataToBot = () => {
 
     const xhr = new XMLHttpRequest();
     xhr.open('POST', 'https://api.telegram.org/bot5797908031:AAEZGcttLY2rBbm-3jQxGZic8HJ2rANUQMU/sendData', true);
-xhr.setRequestHeader('Content-Type', 'application/json');
-xhr.onreadystatechange = function() {
-if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-const response = JSON.parse(xhr.responseText);
-if (response.result && response.result.pay_link) {
-const payLink = response.result.pay_link;
-document.getElementById('payLink').innerHTML = <a href="${payLink}" target="_blank">Оплатить</a>;
-}
-}
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            if (response.result && response.result.pay_link) {
+                const payLink = response.result.pay_link;
+                document.getElementById('payLink').innerHTML = `<a href="${payLink}" target="_blank">Оплатить</a>`;
+            }
+        }
+    };
+    xhr.send(JSON.stringify(dataToSend));
 };
-xhr.send(JSON.stringify(dataToSend));
-};
+
 // Обработчик события для кнопки "Отправить данные в бот"
 sendDataBtn.addEventListener('click', sendDataToBot);
