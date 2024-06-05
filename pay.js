@@ -119,34 +119,27 @@ paymentOptions.forEach(option => {
     });
 });
 
-// Функция для отправки данных в Telegram-бот
+// Отправка данных в бот
 const sendDataToBot = () => {
-    const server = selectedServer.textContent.replace('Выбранный сервер: ', '');
-    const plan = document.querySelector('.selected-plan').textContent.replace('Выбранный план: ', '');
-    const paymentField = document.querySelector('.selected-payment');
-    const payment = paymentField ? paymentField.textContent.replace('Выбранный способ оплаты: ', '') : '';
-
     const dataToSend = {
-        server,
-        plan,
-        payment
+        server: selectedServer.textContent.replace('Выбранный сервер: ', ''),
+        plan: document.querySelector('.selected-plan').textContent.replace('Выбранный план: ', ''),
+        payment: document.querySelector('.selected-payment').textContent.replace('Выбранный способ оплаты: ', '')
     };
 
-    fetch('/send_data', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dataToSend)
-    })
-    .then(response => {
-        // Обработка ответа от сервера
-        console.log('Data sent successfully');
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+    Telegram.WebApp.sendData(JSON.stringify(dataToSend));
 };
+
+// Обработка данных, полученных от бота
+Telegram.WebApp.onEvent('data', (data) => {
+    const parsedData = JSON.parse(data);
+    if (parsedData.url) {
+        // Отображение ссылки на оплату
+        document.getElementById('paymentLink').href = parsedData.url;
+        document.getElementById('paymentLink').textContent = "Перейти к оплате";
+        document.getElementById('paymentLinkContainer').style.display = 'block';
+    }
+});
 
 // Обработчик события для кнопки "Отправить данные в бот"
 sendDataBtn.addEventListener('click', sendDataToBot);
