@@ -121,43 +121,48 @@ paymentOptions.forEach(option => {
 });
 
 // Функция для генерации ссылок на оплату
-const generatePaymentLinks = () => {
-    const server = selectedServer.textContent.replace('Выбранный сервер: ', '');
-    const plan = document.querySelector('.selected-plan').textContent.replace('Выбранный план: ', '');
-    const paymentField = document.querySelector('.selected-payment');
-    const payment = paymentField ? paymentField.textContent.replace('Выбранный способ оплаты: ', '') : '';
+const generatePaymentLinks = async (data) => {
+    try {
+        const response = await fetch('/process-payment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
 
-    //// Функция для генерации ссылок на оплату
-const generatePaymentLinks = () => {
-    const server = selectedServer.textContent.replace('Выбранный сервер: ', '');
-    const plan = document.querySelector('.selected-plan').textContent.replace('Выбранный план: ', '');
-    const paymentField = document.querySelector('.selected-payment');
-    const payment = paymentField ? paymentField.textContent.replace('Выбранный способ оплаты: ', '') : '';
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
 
-    let paymentLink;
+        const responseData = await response.json();
 
-    if (payment === 'Банковская карта') {
-        // Генерация ссылки для оплаты банковской картой
-        paymentLink = 'https://example.com/payment/card';
-    } else if (payment === 'TON') {
-        // Генерация ссылки для оплаты через TON
-        paymentLink = 'https://example.com/payment/ton';
-    } else if (payment === 'USDT') {
-        // Генерация ссылки для оплаты через USDT
-        paymentLink = 'https://example.com/payment/usdt';
-    }
-
-    if (paymentLink) {
-        const paymentLinkElement = document.createElement('a');
-        paymentLinkElement.href = paymentLink;
-        paymentLinkElement.textContent = `Ссылка для оплаты ${plan} через ${payment}`;
-        paymentLinkElement.target = '_blank';
-        paymentLinkContainer.appendChild(paymentLinkElement);
-        paymentLinkContainer.style.display = 'block';
-    } else {
-        alert('Не удалось сгенерировать ссылку для оплаты');
+        // Показываем ссылку на оплату
+        if (responseData.paymentLink) {
+            const paymentLinkElement = document.createElement('a');
+            paymentLinkElement.href = responseData.paymentLink;
+            paymentLinkElement.textContent = `Ссылка для оплаты ${data.plan} через ${data.payment}`;
+            paymentLinkElement.target = '_blank';
+            paymentLinkContainer.appendChild(paymentLinkElement);
+            paymentLinkContainer.style.display = 'block';
+        } else {
+            alert('Не удалось получить ссылку для оплаты');
+        }
+    } catch (error) {
+        console.error('Error:', error);
     }
 };
 
 // Обработчик события для кнопки "Отправить данные в бот"
-sendDataBtn.addEventListener('click', generatePaymentLinks);
+sendDataBtn.addEventListener('click', () => {
+    const selectedPlan = document.querySelector('.selected-plan').textContent.replace('Выбранный план: ', '');
+    const selectedPayment = document.querySelector('.selected-payment').textContent.replace('Выбранный способ оплаты: ', '');
+
+    const data = {
+        plan: selectedPlan,
+        payment: selectedPayment
+    };
+
+    // Отправка данных в бот и обработка ответа
+    generatePaymentLinks(data);
+});
